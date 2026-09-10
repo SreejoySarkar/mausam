@@ -1,232 +1,469 @@
-# 🌦️ Mausam — Personalized Weather Homepage
+# 🌦️ Mausam — Personalized Weather Platform
 
 <p align="center">
-  <strong>A modern Server-Driven UI frontend for a personalized weather experience</strong>
+  <strong>A personalized, resilient weather experience powered by Server-Driven UI</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/SreejoySarkar/mausam-sdui-frontend-development"><img src="https://img.shields.io/badge/Mausam-SDUI-0ea5e9?style=for-the-badge" alt="Mausam SDUI"></a>
-  <img src="https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react&logoColor=white" alt="React 19">
-  <img src="https://img.shields.io/badge/TypeScript-5.9-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/Vite-7-646cff?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/Tailwind_CSS-4-06b6d4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/TanStack_Query-5-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query 5">
+  <img src="https://img.shields.io/badge/Zustand-5-443E38?style=for-the-badge" alt="Zustand 5">
 </p>
 
 <p align="center">
-  <em>Weather information that adapts to the user, location, and context.</em>
+  <em>Weather information that adapts to the user, location, weather conditions and context.</em>
 </p>
 
 ---
 
 ## 📌 Overview
 
-**Mausam** is a personalized weather homepage built around **Server-Driven UI (SDUI)**. Instead of shipping a single rigid homepage layout inside the client, the frontend receives a structured SDUI payload from the backend and renders the experience from that payload.
+**Mausam** is a modern weather platform focused on building a **personalized homepage for the Mausam application**.
 
-The backend can decide:
+Instead of presenting exactly the same weather dashboard to every user, Mausam uses **Server-Driven UI (SDUI)** principles to allow the backend to determine which weather modules, alerts, advisories and information should be prioritized for a particular user.
 
-- Which components should appear
-- The order in which they appear
-- Which weather information should be prioritized
-- Which persona-specific advisories should be shown
-- Which visual theme should be used
+The project combines:
 
-The frontend provides the **safe rendering capabilities**, while the server controls the **composition of the homepage**.
+- 🌦️ Weather information
+- 🧠 Persona-based personalization
+- 🧩 Server-Driven UI
+- 📍 Location search and coordinates
+- 🌍 Global weather data
+- ⚡ Offline/fallback behaviour
+- 🛡️ Defensive rendering
+- 🔔 Backend notification infrastructure
+- 🌊 Marine weather information
+- ☀️ Sunrise/sunset calculations
+- 🌫️ Air-quality integration
 
-This repository is the web build of the Mausam client and is structured around the same module boundaries intended for a React Native / Expo implementation.
+The result is a weather experience that is designed to answer not only **"What is the weather?"**, but also **"What does this weather mean for this user?"**
 
 ---
 
-## 🎯 Problem Statement
+# 🎯 Problem Statement
 
 > **Development of Personalized Homepage for the “Mausam” Mobile Application**
 
-A general-purpose weather screen is not equally useful to every user.
+A conventional weather application generally gives every user a similar set of cards. However, weather information has different value depending on the user's role and activity.
 
-A farmer may need rainfall and agricultural advisories. A fisherman may care about wind and marine conditions. A traveller may prioritize precipitation and travel-oriented weather information. An outdoor user may care about UV exposure and heat risk.
+For example:
 
-Mausam addresses this problem through **persona-aware Server-Driven UI**.
-
-```text
-                         USER
-                          │
-                          ▼
-                    Selected Persona
-                          │
-                          ▼
-                 Mausam Backend Logic
-                          │
-             ┌────────────┼────────────┐
-             ▼            ▼            ▼
-          Weather      Alerts      Advisories
-             │            │            │
-             └────────────┼────────────┘
-                          ▼
-                    SDUI JSON
-                          │
-                          ▼
-                  Mausam Frontend
-                          │
-                          ▼
-              Personalized Homepage
-```
-
----
-
-## ✨ Core Features
-
-### 🧠 Server-Driven UI
-
-The homepage is assembled from a backend-provided component tree instead of a permanently hardcoded page structure.
-
-### 👤 Persona-Based Personalization
-
-Supported personas include:
-
-| Persona | Typical Priority |
+| User Persona | Important Information |
 |---|---|
-| 🌍 General | Balanced everyday weather information |
-| 🌾 Farmer | Rainfall, heat, wind and agricultural advisories |
-| 🎓 Student | Commute conditions, rain probability and forecast |
-| ✈️ Traveller | Precipitation, temperature, wind and travel advisories |
-| 🎣 Fisherman | Wind, gusts, marine conditions and alerts |
-| 🥾 Outdoor | UV, heat risk, rainfall and safe activity windows |
+| 🌍 General User | Current weather, forecast and alerts |
+| 🌾 Farmer | Rainfall, soil moisture, heat, wind and advisories |
+| 🎓 Student | Temperature, rain probability and daily forecast |
+| ✈️ Traveller | Temperature, precipitation, wind, visibility and alerts |
+| 🎣 Fisherman | Wind, gusts, wave height, wave direction and marine conditions |
+| 🥾 Outdoor User | UV, heat, rainfall and suitable activity windows |
 
-### 📍 Global Location Search
-
-The location experience supports:
-
-- Debounced place search
-- City, town and village lookup
-- GPS detection with reverse geocoding
-- Recent searches persisted locally
-- Curated quick-pick locations
-- Coordinate-based weather flows
-
-### ⚡ Offline-First Boot
-
-Cached SDUI content is read synchronously so the application can show the last known homepage immediately instead of waiting for the network.
-
-### 🛡️ Defensive SDUI Rendering
-
-The renderer validates data, uses a component whitelist, validates component props, and isolates component failures with Error Boundaries.
-
-### 🎨 Dynamic Themes
-
-The payload can select an atmosphere such as:
-
-`dusk` · `monsoon` · `heat` · `marine` · `cloud`
-
-### 🎞️ Smooth Motion
-
-Framer Motion provides lightweight entrance transitions while preserving the information hierarchy.
+Mausam addresses this requirement using a **persona-aware SDUI architecture**.
 
 ---
 
-## 🏗️ Architecture
+# 💡 Core Concept
+
+The central architectural idea is:
+
+> **The backend decides what information should be shown; the frontend decides how registered components should render it.**
+
+Traditional UI:
 
 ```text
-                    ┌─────────────────────────┐
-                    │     Mausam Backend      │
-                    │     Node.js / Fastify   │
-                    └────────────┬────────────┘
-                                 │
-                         SDUI JSON payload
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │      API Service         │
-                    │     src/services/api.ts  │
-                    └────────────┬────────────┘
-                                 │
-                         validate payload
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │       HomeScreen        │
-                    │ cache + query + states  │
-                    └────────────┬────────────┘
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │      SDUIRenderer       │
-                    └────────────┬────────────┘
-                                 │
-                          registry lookup
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │   Component Registry    │
-                    │ whitelist + validators  │
-                    └────────────┬────────────┘
-                                 │
-             ┌───────────────────┼───────────────────┐
-             ▼                   ▼                   ▼
-        Weather Hero          Forecasts           Advisories
-             │                   │                   │
-             └───────────────────┼───────────────────┘
-                                 ▼
-                      Personalized Homepage
+Frontend Code
+     ↓
+Fixed Page Layout
+     ↓
+Same Experience for Everyone
+```
+
+Mausam SDUI:
+
+```text
+User + Persona + Location + Weather
+                 ↓
+          Backend / SDUI Logic
+                 ↓
+             SDUI JSON
+                 ↓
+          Frontend Renderer
+                 ↓
+       Personalized Homepage
+```
+
+This separation makes the application easier to personalize, extend and evolve.
+
+---
+
+# ✨ Key Features
+
+## 🧩 1. Server-Driven UI
+
+Mausam uses a structured SDUI payload to describe the homepage.
+
+The server can control:
+
+- Which components appear
+- Component ordering
+- Weather information priority
+- Persona-specific advisories
+- Alerts and severity
+- Visual atmosphere/theme
+
+The frontend does not execute arbitrary server code. It maps known component types to safe, registered React components.
+
+---
+
+## 👤 2. Persona-Based Personalization
+
+Mausam is designed around multiple user personas.
+
+### 🌾 Farmer
+
+Prioritizes information such as:
+
+- Temperature
+- Rain probability
+- Wind
+- Humidity
+- Soil moisture
+- Agricultural advisories
+
+### 🎓 Student
+
+Can prioritize:
+
+- Current temperature
+- Hourly forecast
+- Rain probability
+- Daily conditions
+- Commute-oriented information
+
+### ✈️ Traveller
+
+Can prioritize:
+
+- Temperature
+- Rainfall
+- Wind
+- Visibility
+- Forecast
+- Weather alerts
+
+### 🎣 Fisherman
+
+Can prioritize:
+
+- Wind speed
+- Wind gusts
+- Wave height
+- Wave direction
+- Wave period
+- Marine alerts
+
+### 🥾 Outdoor User
+
+Can prioritize:
+
+- Temperature
+- UV index
+- Rain probability
+- Heat risk
+- Wind
+
+---
+
+# 🌍 Weather Data Architecture
+
+Mausam is designed to work with both **development/fallback weather data** and **live weather services**.
+
+```text
+                    Weather Request
+                          │
+              ┌───────────┴───────────┐
+              │                       │
+              ▼                       ▼
+       Preset / Fallback         Live Weather
+            Data                    APIs
+              │                       │
+              └───────────┬───────────┘
+                          ▼
+                  Normalized Data
+                          │
+                          ▼
+                    SDUI Payload
+                          │
+                          ▼
+                     React UI
+```
+
+This separation is important because the frontend should not need to know where the weather information originated.
+
+---
+
+# ☁️ Open-Meteo Integration
+
+Mausam integrates with **Open-Meteo** for weather and marine information.
+
+The weather service can provide values such as:
+
+- Current temperature
+- Soil moisture
+- Wind speed
+- Hourly forecast
+- Daily forecast
+- Weather conditions
+- Marine wave information
+
+For location-based weather, coordinates are used as the primary input:
+
+```text
+Location
+   ↓
+Latitude + Longitude
+   ↓
+Open-Meteo
+   ↓
+Weather Data
+   ↓
+Data Processing
+   ↓
+Mausam Application
 ```
 
 ---
 
-## 🔄 SDUI Rendering Pipeline
+# 🌊 Marine Weather
 
-The renderer follows a predictable pipeline:
+Mausam's backend also includes a marine weather integration using the Open-Meteo Marine API.
+
+Marine information includes:
+
+- Wave height
+- Wave direction
+- Wave period
+
+This is particularly useful for the **Fisherman** persona and demonstrates how persona-specific data sources can be incorporated into the same platform.
+
+```text
+Fisherman Persona
+       ↓
+Marine Data Required
+       ↓
+Wave + Wind Information
+       ↓
+Marine Advisory
+       ↓
+Personalized Homepage
+```
+
+---
+
+# 🌱 Agricultural Weather
+
+The backend weather integration also retrieves **soil moisture** information.
+
+This creates an additional data source for agricultural-oriented personalization.
+
+```text
+Temperature
+     +
+Rain / Forecast
+     +
+Wind
+     +
+Soil Moisture
+     ↓
+Agricultural Weather Insight
+```
+
+A future production implementation can use this information to generate more sophisticated agricultural advisories.
+
+---
+
+# 🌫️ Air Quality Integration
+
+The backend contains an integration point for the **World Air Quality Index (WAQI)** service.
+
+This can provide air-quality information such as AQI and allow Mausam to eventually combine:
+
+```text
+Weather
+   +
+Air Quality
+   +
+User Persona
+   ↓
+Personalized Environmental Information
+```
+
+For example, an outdoor user could receive an air-quality-aware recommendation in addition to the normal weather forecast.
+
+---
+
+# ☀️ Sunrise & Sunset
+
+Mausam's backend uses **SunCalc** to calculate astronomical information based on latitude and longitude.
+
+```text
+Latitude + Longitude
+        ↓
+     SunCalc
+        ↓
+ Sunrise / Sunset
+```
+
+This information can be used for:
+
+- Day/night detection
+- Weather themes
+- User advisories
+- Outdoor activity recommendations
+
+---
+
+# 🔔 Push Notification Infrastructure
+
+The backend also contains Firebase Cloud Messaging integration points.
+
+The intended architecture is:
+
+```text
+Weather Event / Alert
+          ↓
+    Mausam Backend
+          ↓
+ Firebase Cloud Messaging
+          ↓
+      User Device
+          ↓
+   Weather Notification
+```
+
+This provides a foundation for future features such as:
+
+- Severe weather alerts
+- Heavy rainfall notifications
+- Marine warnings
+- Personalized weather notifications
+
+> Production notification tokens and Firebase service-account credentials must remain private and should never be committed to the repository.
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                           ┌──────────────────────┐
+                           │        USER          │
+                           │ Persona + Location   │
+                           └──────────┬───────────┘
+                                      │
+                                      ▼
+                           ┌──────────────────────┐
+                           │   Mausam Frontend    │
+                           │ React / TypeScript   │
+                           └──────────┬───────────┘
+                                      │
+                                      ▼
+                           ┌──────────────────────┐
+                           │     API / SDUI       │
+                           │       Layer          │
+                           └──────────┬───────────┘
+                                      │
+                     ┌────────────────┼────────────────┐
+                     │                │                │
+                     ▼                ▼                ▼
+                Weather API       Marine API       AQI API
+                     │                │                │
+                     └────────────────┼────────────────┘
+                                      │
+                                      ▼
+                              Data Processing
+                                      │
+                                      ▼
+                                 SDUI Payload
+                                      │
+                                      ▼
+                               SDUI Renderer
+                                      │
+                         ┌────────────┼────────────┐
+                         ▼            ▼            ▼
+                       Hero       Forecast     Advisory
+                         │            │            │
+                         └────────────┼────────────┘
+                                      ▼
+                            Personalized Homepage
+```
+
+---
+
+# 🔄 SDUI Rendering Pipeline
+
+The rendering process follows a controlled pipeline:
 
 ```text
 SDUI JSON
-   │
-   ▼
-Payload validation
-   │
-   ▼
-SDUIRenderer
-   │
-   ▼
+   ↓
+Payload Validation
+   ↓
+SDUI Renderer
+   ↓
 Component Registry
-   │
-   ├── WeatherHero
-   ├── HourlyForecast
-   ├── DailyForecast
-   ├── WeatherAlert
-   ├── Advisory
-   ├── MetricsGrid
-   └── LocationSection
-   │
-   ▼
-React component
-   │
-   ▼
-Rendered UI
+   ↓
+Component Validation
+   ↓
+React Component
+   ↓
+Rendered Homepage
 ```
 
-The renderer processes components in the order supplied by the backend. Unknown or malformed nodes are skipped rather than being allowed to crash the page. fileciteturn14file0
+Example component mapping:
 
-### The architectural principle
+```text
+WeatherHero
+     ↓
+WeatherHero Component
 
-> **Backend decides what to show. Frontend decides how registered components render.**
+HourlyForecast
+     ↓
+HourlyForecast Component
+
+DailyForecast
+     ↓
+DailyForecast Component
+
+WeatherAlert
+     ↓
+Weather Alert Component
+
+Advisory
+     ↓
+Advisory Component
+```
+
+Unknown or malformed components should be ignored rather than being allowed to break the complete page.
 
 ---
 
-## 📦 SDUI Payload Model
+# 📦 Example SDUI Payload
 
-The frontend defines a typed contract for the SDUI envelope.
+A simplified SDUI response can look like:
 
 ```json
 {
   "version": "1.0",
   "persona": "farmer",
   "location": {
-    "id": "kolkata",
     "city": "Kolkata",
     "state": "West Bengal",
-    "label": "Kolkata, West Bengal",
     "lat": 22.5726,
     "lon": 88.3639
   },
   "theme": "monsoon",
-  "generatedAt": "2026-09-09T08:00:00.000Z",
   "components": [
     {
       "id": "hero",
@@ -237,721 +474,697 @@ The frontend defines a typed contract for the SDUI envelope.
       }
     },
     {
+      "id": "forecast",
+      "type": "HourlyForecast",
+      "props": {}
+    },
+    {
       "id": "advisory",
       "type": "Advisory",
       "props": {
-        "title": "Agri Advisory"
+        "title": "Agricultural Advisory"
       }
     }
   ]
 }
 ```
 
-The TypeScript contract includes persona, theme, severity, accent, location metadata, component nodes, weather hero data, hourly/daily forecasts, alerts, advisories, metrics and saved locations. Runtime guards reject structurally invalid payloads before rendering. fileciteturn13file0
+The important point is that the backend supplies **data and composition**, while the frontend supplies the safe visual implementation.
 
 ---
 
-## 🧩 Component System
+# 🛡️ Defensive SDUI Design
 
-| Component | Responsibility |
-|---|---|
-| `WeatherHero` | Current temperature, condition, feels-like, high/low and quick stats |
-| `HourlyForecast` | Hour-by-hour temperature and precipitation |
-| `DailyForecast` | Multi-day forecast |
-| `WeatherAlert` | Weather warnings and severity |
-| `Advisory` | Persona-specific recommendations and weather intelligence |
-| `MetricsGrid` | Weather metrics and visual gauges |
-| `LocationSection` | Current and saved locations |
+Server-controlled payloads should always be treated as untrusted input.
 
-All server-controlled component types pass through the registry before they can render. fileciteturn15file0
+Mausam follows a defensive rendering philosophy.
 
----
-
-## 🛡️ SDUI Security & Reliability
-
-Server-driven interfaces must treat network data as untrusted input. Mausam therefore places multiple defensive boundaries between the payload and the UI.
-
-### 1. Payload validation
+### Payload Validation
 
 ```text
-Network payload
-      ↓
-Runtime validation
-      ↓
-Invalid → reject
-Valid   → renderer
+Incoming JSON
+     ↓
+Validate Structure
+     ↓
+Valid? ── No ──► Reject / Fallback
+  │
+ Yes
+  ↓
+Render
 ```
 
-### 2. Component whitelist
+### Component Whitelist
 
-Only component types explicitly present in the registry are allowed to render.
+Only registered component types should be rendered.
 
-There is:
+The architecture avoids:
 
-- No `eval`
-- No server-controlled JSX
-- No arbitrary JavaScript execution
-- No uncontrolled dynamic imports keyed by server data
+- `eval`
+- Server-controlled JSX
+- Arbitrary JavaScript execution
+- Uncontrolled dynamic imports
 
-### 3. Prop validation
+### Error Isolation
 
-Registered components can define validators that check the minimum shape required for rendering.
-
-### 4. Error Boundary isolation
-
-Each SDUI node is wrapped in an Error Boundary. A single component failure does not need to take down the entire homepage.
-
-### 5. Graceful degradation
-
-Unknown components and invalid nodes can simply disappear from the rendered tree while valid components continue working.
-
-### 6. Secrets stay server-side
-
-Weather-provider credentials should never be placed in the frontend bundle. The API layer is intentionally designed so upstream provider access can be handled by the backend. fileciteturn16file0
-
----
-
-## ⚡ Offline-First Architecture
-
-Mausam is designed so that a previously synchronized homepage remains useful during network failures.
+A component failure should not bring down the entire homepage.
 
 ```text
-App Launch
-    │
-    ▼
-Read cached SDUI synchronously
-    │
-    ├── Cache found ─────► Render immediately
-    │                           │
-    │                           ▼
-    │                    Fetch fresh payload
-    │                           │
-    │                           ▼
-    │                    Validate + persist
-    │
-    └── No cache ───────► Skeleton
-                               │
-                               ▼
-                         Fetch backend
+Homepage
+ ├── Hero        ✅
+ ├── Forecast    ✅
+ ├── Alert       ❌
+ ├── Advisory    ✅
+ └── Metrics     ✅
+
+Result: Homepage continues to work.
 ```
-
-When the backend becomes unavailable:
-
-- Existing cached content remains visible.
-- A stale/offline state can be displayed.
-- The user can retry.
-- Connectivity recovery can trigger refetching.
-
-The `HomeScreen` coordinates cache reads, TanStack Query fetching, payload persistence, connectivity listeners, theme updates and fallback states. fileciteturn17file0
 
 ---
 
-## 📍 Location Architecture
+# ⚡ Offline & Failure-Resilient Design
 
-The location layer is designed around a single SDUI contract.
+Weather applications should remain useful even when connectivity is unreliable.
+
+Mausam is designed around fallback behaviour:
 
 ```text
-Search / GPS
-    │
-    ▼
-Geocoding
-    │
-    ▼
-LocationMeta
-    │
-    ▼
-Weather request
-    │
-    ▼
-Persona-aware SDUI payload
-    │
-    ▼
-Same renderer
+                 Weather Request
+                       │
+                       ▼
+                 Backend Available?
+                    /       \
+                  YES        NO
+                   │          │
+                   ▼          ▼
+               Fresh Data   Cached /
+                             Fallback Data
+                   │          │
+                   └────┬─────┘
+                        ▼
+                   SDUI Payload
+                        ▼
+                       UI
 ```
 
-This means a custom location does not require a separate UI implementation. The location simply becomes another input to the backend/data pipeline.
-
-The intended production backend endpoints include:
-
-```http
-GET  /v1/geo?query=<place>
-GET  /v1/home?persona=<persona>&location=<location>
-POST /v1/persona
-```
+This approach allows the application to continue displaying useful information instead of immediately becoming a blank/error screen.
 
 ---
 
-## 🧠 State Management
+# 🧪 Backend Outage Simulation
 
-Mausam separates server state from local application state.
+For development and demonstrations, backend failure can be simulated conceptually as:
+
+```text
+Normal Mode
+    ↓
+Backend Request
+    ↓
+SDUI Response
+    ↓
+Render Homepage
+```
+
+and:
+
+```text
+Outage Simulation
+    ↓
+Backend Request Fails
+    ↓
+Fallback / Cached Data
+    ↓
+Render Available Information
+    ↓
+Show Offline / Stale State
+```
+
+This is useful for demonstrating **fault tolerance, graceful degradation and offline-first thinking**.
+
+---
+
+# 📍 Location Flow
+
+The location pipeline can be represented as:
+
+```text
+User Search / Coordinates
+          ↓
+       Geocoding
+          ↓
+ Latitude + Longitude
+          ↓
+    Weather Request
+          ↓
+    Normalized Data
+          ↓
+    Persona Selection
+          ↓
+      SDUI Payload
+          ↓
+    Personalized UI
+```
+
+A location therefore becomes an input to the same personalization pipeline rather than requiring a separate page.
+
+---
+
+# 🧠 State Management
+
+Mausam separates local application state from server-like state.
 
 | Responsibility | Technology |
 |---|---|
-| Server state | TanStack Query |
-| Local/UI state | Zustand |
-| Persistent cache | MMKV-style storage layer |
+| Server / async state | TanStack Query |
+| Local application state | Zustand |
 | UI rendering | React |
 | Styling | Tailwind CSS |
 | Animation | Framer Motion |
+| Icons | Lucide React |
+| Testing | Vitest + JSDOM |
 
 ### TanStack Query
 
-Used for:
+Useful for:
 
-- Request lifecycle
-- Server cache
-- Stale state
-- Retry behavior
-- Background refetching
-- Query keys based on persona and location
+- Fetching
+- Caching
+- Loading states
+- Error states
+- Refetching
+- Retry behaviour
+- Server-state lifecycle
 
 ### Zustand
 
-Used for lightweight application state such as:
+Useful for lightweight application state such as:
 
-- Persona
-- Location
+- Selected persona
+- Selected location
+- Theme state
 - Online/offline state
-- Theme
-- Developer/offline simulation state
-
-### Persistence
-
-The storage abstraction mirrors synchronous MMKV-style semantics, keeping the cache seam suitable for the intended React Native / Expo implementation.
+- Developer/demo controls
 
 ---
 
-## 📂 Project Structure
+# 🎨 Dynamic Weather Experience
+
+Mausam can use weather information to influence the visual atmosphere of the application.
+
+Possible themes include:
 
 ```text
-mausam-sdui-frontend-development/
-│
-├── src/
-│   ├── components/
-│   │   ├── chrome/
-│   │   │   ├── AppHeader.tsx
-│   │   │   ├── Backdrop.tsx
-│   │   │   ├── PersonaSheet.tsx
-│   │   │   └── StatusBar.tsx
-│   │   │
-│   │   ├── sdui/
-│   │   │   ├── AdvisoryCard.tsx
-│   │   │   ├── DailyForecast.tsx
-│   │   │   ├── HourlyForecast.tsx
-│   │   │   ├── LocationSection.tsx
-│   │   │   ├── MetricsGrid.tsx
-│   │   │   ├── WeatherAlertCard.tsx
-│   │   │   └── WeatherHero.tsx
-│   │   │
-│   │   └── states/
-│   │       ├── ErrorState.tsx
-│   │       ├── HomeSkeleton.tsx
-│   │       └── OfflineBanner.tsx
-│   │
-│   ├── screens/
-│   │   └── HomeScreen.tsx
-│   │
-│   ├── sdui/
-│   │   ├── registry.tsx
-│   │   └── SDUIRenderer.tsx
-│   │
-│   ├── services/
-│   │   └── api.ts
-│   │
-│   ├── mock/
-│   │   └── backend.ts
-│   │
-│   ├── storage/
-│   │   └── mmkv.ts
-│   │
-│   ├── store/
-│   │   └── useAppStore.ts
-│   │
-│   ├── types/
-│   │   └── sdui.ts
-│   │
-│   ├── lib/
-│   │   ├── format.ts
-│   │   ├── icons.ts
-│   │   └── theme.ts
-│   │
-│   ├── __tests__/
-│   │   ├── offline.test.ts
-│   │   └── sdui.test.tsx
-│   │
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── index.css
-│
-├── public/
-├── package.json
-├── tsconfig*.json
-├── vite.config.*
-└── README.md
+☀️ Clear / Heat
+☁️ Cloud
+🌧️ Monsoon
+🌆 Dusk
+🌊 Marine
+🌙 Night
 ```
 
----
-
-## 🛠️ Tech Stack
-
-### Core
-
-- **React 19** — component-based UI
-- **TypeScript 5.9** — type safety
-- **Vite 7** — development and production tooling
-- **Tailwind CSS 4** — styling
-
-### Application
-
-- **TanStack Query** — server-state management
-- **Zustand** — local state management
-- **Framer Motion** — animations
-- **Lucide React** — icons
-
-### Testing
-
-- **Vitest** — test runner
-- **JSDOM** — browser-like test environment
-
-The current project dependency configuration is defined in `package.json`. fileciteturn12file0
+This creates a more immersive experience while keeping the underlying component structure reusable.
 
 ---
 
-## 🚀 Getting Started
+# 🧩 Component Architecture
 
-### Prerequisites
+The UI is organized around reusable components rather than a single large weather page.
 
-Install:
+Typical responsibilities include:
+
+| Component | Purpose |
+|---|---|
+| `WeatherHero` | Main current-weather information |
+| `HourlyForecast` | Hour-by-hour forecast |
+| `DailyForecast` | Multi-day forecast |
+| `WeatherAlert` | Weather warnings |
+| `Advisory` | Persona-specific recommendations |
+| `MetricsGrid` | Weather measurements |
+| `LocationSection` | Location information |
+| `HomeScreen` | Homepage orchestration |
+| `SDUIRenderer` | Dynamic component rendering |
+| Component Registry | Safe component lookup |
+
+---
+
+# 📂 Repository Structure
+
+The repository contains both the client-side Mausam implementation and a backend integration area.
+
+```text
+mausam/
+│
+├── README.md
+├── index.html
+├── .gitignore
+│
+├── mausam_backend/
+│   ├── package.json
+│   ├── package-lock.json
+│   │
+│   └── src/
+│       ├── firebaseAdmin.js
+│       ├── testFCM.js
+│       ├── testWeather.js
+│       │
+│       ├── services/
+│       │   └── externalApiService.js
+│       │
+│       └── utils/
+│           └── dataProcessor.js
+│
+└── frontend source / application modules
+    ├── components/
+    ├── services/
+    ├── mock/
+    ├── storage/
+    ├── store/
+    ├── types/
+    ├── screens/
+    └── tests/
+```
+
+> The exact frontend directory layout may evolve as the Mausam application is developed toward its final mobile/web architecture.
+
+---
+
+# 🛠️ Technology Stack
+
+## Frontend
+
+- **React 19**
+- **TypeScript 5.9**
+- **Vite 7**
+- **Tailwind CSS 4**
+- **TanStack Query 5**
+- **Zustand 5**
+- **Framer Motion**
+- **Lucide React**
+
+## Backend
+
+The backend integration area currently uses:
+
+- **Node.js**
+- **CommonJS modules**
+- **Axios**
+- **dotenv**
+- **Firebase Admin SDK**
+- **SunCalc**
+
+## External Services
+
+- **Open-Meteo** — weather data
+- **Open-Meteo Marine** — marine data
+- **WAQI** — air-quality integration
+- **Firebase Cloud Messaging** — push notification infrastructure
+
+---
+
+# 🚀 Getting Started
+
+## Prerequisites
+
+Install the following before running the project:
 
 - Node.js
 - npm
 - Git
 
-### 1. Clone
+---
 
-```bash
-git clone https://github.com/SreejoySarkar/mausam-sdui-frontend-development.git
-cd mausam-sdui-frontend-development
-```
+## Frontend Setup
 
-### 2. Install dependencies
+If working with the frontend application:
 
 ```bash
 npm install
 ```
 
-### 3. Start development server
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-### 4. Create production build
+Create a production build:
 
 ```bash
 npm run build
 ```
 
-### 5. Preview production build
+Preview the production build:
 
 ```bash
 npm run preview
 ```
 
-The repository currently defines Vite `dev`, `build`, and `preview` scripts. fileciteturn12file0
+---
+
+## Backend Setup
+
+Move into the backend directory:
+
+```bash
+cd mausam_backend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+The backend integrations use environment variables for protected configuration.
+
+Create a local `.env` file for values such as API tokens and other secrets.
+
+**Never commit `.env` or Firebase service-account credentials to Git.**
 
 ---
 
-## 🧪 Testing
+# 🔐 Security Notes
 
-Run the test suite with:
+The repository contains integrations involving external services and notification infrastructure. Sensitive credentials must remain outside the source code.
 
-```bash
-npx vitest run
+### Never commit:
+
+```text
+.env
+firebase-service-account.json
+API keys
+private tokens
+service credentials
 ```
 
-Recommended test coverage includes:
+Use environment variables instead:
+
+```text
+process.env.WAQI_TOKEN
+process.env.MAPPLS_LICENSE_KEY
+```
+
+For production deployments, the recommended architecture is:
+
+```text
+Client
+  ↓
+Mausam Backend
+  ↓
+External Weather Services
+```
+
+rather than exposing sensitive service configuration directly to the client.
+
+---
+
+# 📊 Data Processing Pipeline
+
+External API responses should not be passed directly into the UI.
+
+Mausam's backend includes a processing layer:
+
+```text
+External API
+     ↓
+Raw Response
+     ↓
+Data Processor
+     ↓
+Normalized Data
+     ↓
+Application Logic
+     ↓
+SDUI / Client
+```
+
+For example:
+
+```text
+Open-Meteo
+   ↓
+Raw Weather Response
+   ↓
+processWeatherData()
+   ↓
+Temperature
+Soil Moisture
+Wind Speed
+```
+
+Similarly, marine data can be transformed into application-friendly values such as:
+
+```text
+Wave Height
+Wave Direction
+Wave Period
+```
+
+---
+
+# 🧪 Testing Strategy
+
+The project is designed to support testing at multiple levels.
+
+### UI / Renderer Tests
+
+Test:
 
 - Valid SDUI payloads
-- Invalid payload handling
-- Unknown component types
-- Invalid component props
-- Error Boundary isolation
-- Cache restoration
-- Offline behavior
-- Persona switching
-- API retry behavior
+- Invalid payloads
+- Unknown components
+- Component rendering
+- Error boundaries
+
+### Offline Tests
+
+Test:
+
+- Cached content
+- Backend failure
+- Fallback rendering
+- Offline state
+- Recovery after connectivity returns
+
+### Backend Integration Tests
+
+Test:
+
+- Weather API responses
+- Data processing
+- Marine API responses
+- AQI integration
+- Sunrise/sunset calculation
+- Notification infrastructure
 
 ---
 
-## 🔌 Backend Integration
-
-The frontend intentionally isolates network communication inside `src/services/api.ts`.
-
-The current development implementation uses the mock backend. The service contains the intended production transport seam for a Node.js/Fastify backend and validates the returned payload before rendering. fileciteturn16file0
-
-### Intended production flow
+# 🔄 Complete Application Flow
 
 ```text
-Frontend
-   │
-   │ GET /v1/home
-   ▼
-Fastify Backend
-   │
-   ├── Weather APIs
-   ├── Geocoding
-   ├── Persona logic
-   ├── Alerts
-   ├── Advisories
-   └── SDUI composition
-   │
-   ▼
-SDUIPayload
-   │
-   ▼
-Frontend validation
-   │
-   ▼
-SDUIRenderer
-```
-
-### API Contract
-
-```http
-GET /v1/home?persona=farmer&location=kolkata
-```
-
-```http
-GET /v1/geo?query=jaipur
-```
-
-```http
-POST /v1/persona
-Content-Type: application/json
-
-{
-  "persona": "farmer"
-}
+                    USER
+                      │
+          ┌───────────┴───────────┐
+          │                       │
+       Persona                 Location
+          │                       │
+          └───────────┬───────────┘
+                      ▼
+              Weather Request
+                      │
+        ┌─────────────┼─────────────┐
+        ▼             ▼             ▼
+     Weather         Marine         AQI
+       API             API           API
+        │             │             │
+        └─────────────┼─────────────┘
+                      ▼
+                Data Processing
+                      │
+                      ▼
+               Personalization
+                      │
+                      ▼
+                  SDUI JSON
+                      │
+                      ▼
+               Payload Validation
+                      │
+                      ▼
+               Component Registry
+                      │
+                      ▼
+                React Components
+                      │
+                      ▼
+              Personalized Homepage
 ```
 
 ---
 
-## 🎨 Theme System
+# 🏭 Production Architecture
 
-The backend can select a theme as part of the SDUI payload.
-
-Supported theme identifiers include:
-
-- `dusk`
-- `monsoon`
-- `heat`
-- `marine`
-- `cloud`
-
-The frontend then applies the corresponding visual atmosphere while keeping the component composition server-driven.
-
----
-
-## 🧱 Adding a New SDUI Component
-
-Suppose you want to add `PollenCard`.
-
-### Step 1 — Create the component
+The long-term production architecture can evolve toward:
 
 ```text
-src/components/sdui/PollenCard.tsx
+                         ┌───────────────────┐
+                         │   Mausam Client   │
+                         │   Web / Mobile    │
+                         └─────────┬─────────┘
+                                   │
+                                   ▼
+                         ┌───────────────────┐
+                         │   API Gateway     │
+                         │  Mausam Backend   │
+                         └─────────┬─────────┘
+                                   │
+             ┌─────────────────────┼─────────────────────┐
+             │                     │                     │
+             ▼                     ▼                     ▼
+      Personalization        Weather Services       Notification
+          Engine                   │                  Service
+             │                     │                     │
+             └─────────────────────┼─────────────────────┘
+                                   ▼
+                              SDUI Generator
+                                   │
+                                   ▼
+                              JSON Response
+                                   │
+                                   ▼
+                            Mausam Renderer
 ```
 
-### Step 2 — Define its props
-
-Add the TypeScript interface in:
-
-```text
-src/types/sdui.ts
-```
-
-### Step 3 — Register it
-
-Add it to:
-
-```text
-src/sdui/registry.tsx
-```
-
-### Step 4 — Add validation
-
-Create a runtime validator for the minimum required props.
-
-### Step 5 — Emit it from the backend
-
-```json
-{
-  "id": "pollen",
-  "type": "PollenCard",
-  "props": {}
-}
-```
-
-Older frontend versions that do not know the component can safely skip it, which helps the SDUI contract evolve without forcing every client release to understand every future component.
+This architecture makes it possible to add new personas, weather providers and homepage modules without redesigning the entire client.
 
 ---
 
-## 🧪 Offline Demo
+# 📈 Future Roadmap
 
-The application includes a developer-oriented offline simulation flow.
+- [ ] Production Node.js/Fastify API server
+- [ ] Complete frontend/backend SDUI contract
+- [ ] Persistent user profiles
+- [ ] More user personas
+- [ ] Advanced agricultural advisories
+- [ ] Advanced marine advisories
+- [ ] Real-time severe weather alerts
+- [ ] Push notification scheduling
+- [ ] Better offline caching
+- [ ] PWA support
+- [ ] React Native / Expo client
+- [ ] Multilingual interface
+- [ ] Voice-based weather queries
+- [ ] AI-assisted weather recommendations
+- [ ] Historical weather analytics
+- [ ] Secure authentication
+- [ ] Rate limiting and API protection
+- [ ] Backend observability and monitoring
+- [ ] SDUI A/B experimentation
 
-Open the persona sheet and use:
+---
+
+# 🎓 Academic Context
+
+### Project Title
+
+**Mausam — Development of Personalized Homepage for the “Mausam” Mobile Application**
+
+### Major Technical Concepts Demonstrated
+
+- Server-Driven UI
+- Component-based architecture
+- React development
+- TypeScript
+- API integration
+- Data normalization
+- Personalization
+- State management
+- Offline-first design
+- Fault tolerance
+- Defensive rendering
+- Weather data processing
+- Marine data processing
+- Air-quality integration
+- Push notification infrastructure
+- Responsive UI design
+
+---
+
+# 🌟 Why This Project Matters
+
+Mausam demonstrates how a weather application can move beyond a static dashboard.
+
+Instead of:
 
 ```text
-Developer → Simulate backend outage
+One User
+     ↓
+One Fixed Dashboard
 ```
 
-The expected behavior is:
+Mausam aims for:
 
 ```text
-Backend outage
-     │
-     ▼
-Request fails
-     │
-     ▼
-Cached payload remains
-     │
-     ├── Show stale/offline state
-     └── Allow retry
+Different Users
+      ↓
+Different Needs
+      ↓
+Different Priorities
+      ↓
+Personalized SDUI
+      ↓
+One Reusable Frontend
 ```
 
-When the simulated outage is removed, the application can recover through a fresh request.
+This makes the architecture suitable for experimentation, personalization and future expansion.
 
 ---
 
-## 📱 Web → Mobile Design
-
-The project is intentionally structured so that the core SDUI architecture can map cleanly to a React Native / Expo client.
-
-```text
-                 Shared Mausam Backend
-                         │
-             ┌───────────┴───────────┐
-             ▼                       ▼
-        React Web              React Native / Expo
-             │                       │
-             └───────────┬───────────┘
-                         ▼
-                  Shared SDUI Contract
-```
-
-The main reusable concepts are:
-
-- SDUI payload contract
-- Persona model
-- Location model
-- Component type names
-- Component props
-- Registry/renderer architecture
-- Cache and synchronization strategy
-
----
-
-## 📊 Why SDUI?
-
-### Traditional approach
-
-```text
-Frontend code
-     │
-     └── fixed layout
-          ├── Hero
-          ├── Hourly
-          ├── Daily
-          └── Metrics
-```
-
-Changing the composition generally requires a client-side code change and release.
-
-### Mausam SDUI approach
-
-```text
-Backend
-   │
-   └── component tree
-        ├── Hero
-        ├── Advisory
-        ├── Alert
-        └── Metrics
-              │
-              ▼
-         SDUI Renderer
-              │
-              ▼
-         Existing React components
-```
-
-This allows the backend to experiment with different homepage compositions while the frontend remains a controlled rendering platform.
-
-### Benefits
-
-- Personalized experiences
-- Faster layout experimentation
-- Centralized composition logic
-- Explicit frontend/backend contracts
-- Safer evolution of UI capabilities
-- Reduced need for client releases for every ordering/content decision
-
----
-
-## 🔐 Engineering Principles
-
-### Separation of Concerns
-
-```text
-Backend → What should be shown?
-Frontend → How should it be rendered?
-```
-
-### Validate at Boundaries
-
-Never assume network data is valid.
-
-### Fail Soft
-
-One broken component should not destroy the entire homepage.
-
-### Cache First
-
-Previously synchronized information should remain useful during temporary connectivity problems.
-
-### Explicit Capabilities
-
-The server can select only components deliberately exposed by the frontend registry.
-
-### Server-Side Secrets
-
-Upstream weather credentials belong on the backend.
-
----
-
-## 📈 Roadmap
-
-### Phase 1 — Frontend Foundation
-
-- [x] React + TypeScript setup
-- [x] SDUI type system
-- [x] Component registry
-- [x] SDUI renderer
-- [x] Persona model
-- [x] Weather component library
-- [x] Offline/cache flow
-- [x] Runtime validation
-- [x] Error isolation
-- [x] Location search architecture
-
-### Phase 2 — Production Backend
-
-- [ ] Connect live Fastify service
-- [ ] Integrate production weather providers
-- [ ] Production geocoding proxy
-- [ ] Persona-specific SDUI composition
-- [ ] Shared runtime schema validation
-- [ ] API observability
-
-### Phase 3 — Product Experience
-
-- [ ] Severe weather push notifications
-- [ ] Multilingual content
-- [ ] Voice weather queries
-- [ ] Advanced agricultural intelligence
-- [ ] Marine intelligence
-- [ ] Richer location experience
-- [ ] Native mobile deployment
-- [ ] CI/CD automation
-
----
-
-## 🤝 Contributing
-
-1. Create a feature branch.
-
-```bash
-git checkout -b feature/your-feature
-```
-
-2. Make your changes.
-
-3. Build the project.
-
-```bash
-npm run build
-```
-
-4. Run tests.
-
-```bash
-npx vitest run
-```
-
-5. Commit and push.
-
-```bash
-git add .
-git commit -m "feat: describe your change"
-git push origin feature/your-feature
-```
-
-6. Open a pull request with a clear explanation of the change.
-
----
-
-## 📌 Project Status
-
-This repository contains the **Mausam personalized SDUI frontend**.
-
-The frontend already implements the core architecture required for a production SDUI client:
-
-- Typed SDUI contracts
-- Runtime payload guards
-- Component registry
-- Component-level validation
-- Error Boundary isolation
-- Persona-based state
-- Location-aware queries
-- Offline-first caching
-- Mock backend integration
-- Production API abstraction
-- Weather-focused component library
-
-The current network layer uses mock transport for development, while the architecture is prepared for connection to the Mausam Node.js/Fastify backend. fileciteturn16file0turn17file0
-
----
-
-## 👨‍💻 Author
+# 👨‍💻 Author
 
 **Sreejoy Sarkar**
 
-B.Tech — Computer Science & Engineering (Cyber Security)
+B.Tech — Computer Science / Cyber Security
 
-GitHub: [@SreejoySarkar](https://github.com/SreejoySarkar)
+### Interests
+
+- Software Development
+- Full-Stack Development
+- Cyber Security
+- AI/ML
+- Backend Development
+- Modern Frontend Architecture
+- Cloud & API Integration
 
 ---
 
-## ⭐ Why This Project Matters
+# 📄 License
 
-Mausam demonstrates more than a standard weather dashboard. It combines modern frontend engineering with an architecture designed for **personalization, resilience, and controlled server-driven experiences**.
+This project is primarily developed for **academic, learning and demonstration purposes**.
 
-### Concepts demonstrated
+If the project is later released for public reuse, an appropriate open-source license should be added to the repository.
 
-- ⚛️ Modern React architecture
-- 🔷 TypeScript contracts
-- 🧠 Server-Driven UI
-- 👤 Persona-based personalization
-- 📍 Location-aware experiences
-- ⚡ Offline-first UX
-- 🛡️ Defensive rendering
-- 🔄 Server-state management
-- 💾 Persistent local state
-- 🎨 Dynamic visual themes
-- 🧩 Extensible component architecture
-- 🧪 Automated testing strategy
+---
 
-> **Mausam — Weather that adapts to you.** 🌦️
+# ⭐ Project Summary
+
+```text
+                         🌦️ MAUSAM
+                             │
+              ┌──────────────┼──────────────┐
+              │              │              │
+              ▼              ▼              ▼
+        Personalization   Live Data       Resilience
+              │              │              │
+              ▼              ▼              ▼
+             Persona      Weather APIs    Offline/Fallback
+              │              │              │
+              └──────────────┼──────────────┘
+                             ▼
+                           SDUI
+                             │
+                             ▼
+                    Personalized Weather
+                         Experience
+```
+
+> **Mausam — Weather that adapts to you.**
