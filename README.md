@@ -1168,5 +1168,4 @@ If the project is later released for public reuse, an appropriate open-source li
 ```
 
 > **Mausam — Weather that adapts to you.**
-..
 
