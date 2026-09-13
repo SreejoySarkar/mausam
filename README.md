@@ -818,6 +818,35 @@ Preview the production build:
 npm run preview
 ```
 
+## SDUI Gateway Setup
+
+Start the gateway from its package directory:
+
+```bash
+cd sdui-gateway
+npm install
+npm run dev
+```
+
+Set `WORLDTIDES_API_KEY` in the gateway environment to enable high/low tide events from WorldTides. Without this optional key, fisherman responses clearly report that tide timings are not configured rather than showing fabricated values.
+
+Set `TOMTOM_API_KEY` to enable traffic-aware route timing. Requests must include `originLat`, `originLon`, `destinationLat`, and `destinationLon`; without a complete route and key, traffic cards are omitted.
+
+Traveller providers are separate: set `AVIATIONSTACK_API_KEY` for flight status, or `NAVITIA_API_KEY` for bus/train journey searches. Flight plans also require a flight number and travel date; transit plans require a travel date.
+
+For local gateway development, create `sdui-gateway/.env` with `TOMTOM_API_KEY=your_key`. The gateway loads this file automatically. Do not commit it.
+
+The gateway also supports an optional 15-minute cache. Start PostgreSQL and Redis with:
+
+```bash
+cd sdui-gateway
+docker compose up -d
+```
+
+Copy `.env.example` to `.env`, set `DATABASE_URL` and `REDIS_URL`, then run `npm run db:migrate`. Redis is used as the hot cache and PostgreSQL stores the durable `WeatherSnapshot` fallback. If either service is unavailable, the gateway continues with upstream provider requests.
+
+To use the gateway from the frontend, set `VITE_API_BASE_URL=http://localhost:4000` before starting Vite. If it is omitted, the frontend stays in deterministic mock mode.
+
 ---
 
 ## Backend Setup

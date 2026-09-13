@@ -12,7 +12,10 @@ export type PersonaId =
   | "student"
   | "traveller"
   | "fisherman"
-  | "outdoor";
+  | "outdoor"
+  | "health"
+  | "parent"
+  | "event";
 
 export type ThemeId = "dusk" | "monsoon" | "heat" | "marine" | "cloud";
 

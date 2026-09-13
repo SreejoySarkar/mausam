@@ -1,16 +1,52 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HomeScreen } from "./screens/HomeScreen";
 import { Backdrop } from "./components/chrome/Backdrop";
 import { StatusBar } from "./components/chrome/StatusBar";
 import { PersonaSheet } from "./components/chrome/PersonaSheet";
 import { LocationSheet } from "./components/chrome/LocationSheet";
+import { CommuteSheet } from "./components/chrome/CommuteSheet";
+import { TravelSheet } from "./components/chrome/TravelSheet";
 import { useAppStore } from "./store/useAppStore";
 import { ATMOSPHERE } from "./lib/theme";
+import { reverseGeocode } from "./services/openMeteo";
+import { readLocation } from "./storage/mmkv";
 
 function Stage() {
   const theme = useAppStore((s) => s.theme);
   const atmo = ATMOSPHERE[theme];
+  const setLocation = useAppStore((s) => s.setLocation);
+  const pushRecentLocation = useAppStore((s) => s.pushRecentLocation);
+
+  useEffect(() => {
+    if (readLocation() || !navigator.geolocation) return;
+    try {
+      if (window.sessionStorage.getItem("mausam.location-detection-attempted")) return;
+      window.sessionStorage.setItem("mausam.location-detection-attempted", "1");
+    } catch {
+      // Best effort only; location detection must never block the homepage.
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        const city = (await reverseGeocode(coords.latitude, coords.longitude)) ?? "Current location";
+        const location = {
+          id: `gps-${coords.latitude.toFixed(3)}-${coords.longitude.toFixed(3)}`,
+          city,
+          state: "",
+          label: city === "Current location" ? city : `${city} (GPS)`,
+          lat: coords.latitude,
+          lon: coords.longitude,
+        };
+        setLocation(location);
+        pushRecentLocation(location);
+      },
+      () => {
+        // The preset remains active when permission is denied or GPS is unavailable.
+      },
+      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 300_000 }
+    );
+  }, [pushRecentLocation, setLocation]);
 
   return (
     <div className="relative flex h-dvh items-center justify-center overflow-hidden">
@@ -33,6 +69,8 @@ function Stage() {
         <HomeScreen />
         <PersonaSheet />
         <LocationSheet />
+        <CommuteSheet />
+        <TravelSheet />
       </div>
 
       {/* desktop caption */}

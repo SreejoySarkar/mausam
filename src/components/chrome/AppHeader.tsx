@@ -2,7 +2,7 @@
  * App header — Mausam wordmark, location context, sync indicator,
  * notifications, and the persona pill that opens the selector sheet.
  */
-import { Bell, ChevronDown, CloudSun, MapPin, RefreshCw } from "lucide-react";
+import { Bell, Car, ChevronDown, CloudSun, MapPin, Plane, RefreshCw } from "lucide-react";
 import { resolveIcon } from "../../lib/icons";
 import { personaMeta } from "../../store/personas";
 import { useAppStore } from "../../store/useAppStore";
@@ -13,6 +13,10 @@ export function AppHeader({ locationLabel, syncing, onRetry }: { locationLabel: 
   const theme = useAppStore((s) => s.theme);
   const setSheetOpen = useAppStore((s) => s.setSheetOpen);
   const setLocationSheetOpen = useAppStore((s) => s.setLocationSheetOpen);
+  const setCommuteSheetOpen = useAppStore((s) => s.setCommuteSheetOpen);
+  const commuteRoute = useAppStore((s) => s.commuteRoute);
+  const setTravelSheetOpen = useAppStore((s) => s.setTravelSheetOpen);
+  const travelPlan = useAppStore((s) => s.travelPlan);
   const meta = personaMeta(persona);
   const PersonaIcon = resolveIcon(meta.icon);
   const atmo = ATMOSPHERE[theme];
@@ -41,6 +45,14 @@ export function AppHeader({ locationLabel, syncing, onRetry }: { locationLabel: 
             className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] backdrop-blur transition active:scale-90"
           >
             <RefreshCw className={`h-4 w-4 text-white/75 ${syncing ? "spin-slow" : ""}`} strokeWidth={2.2} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setCommuteSheetOpen(true)}
+            aria-label={commuteRoute ? "Edit commute route" : "Set commute route"}
+            className={`flex h-9 w-9 items-center justify-center rounded-full border backdrop-blur transition active:scale-90 ${commuteRoute ? "border-sky-300/30 bg-sky-300/10" : "border-white/10 bg-white/[0.06]"}`}
+          >
+            <Car className={`h-4 w-4 ${commuteRoute ? "text-sky-200" : "text-white/75"}`} strokeWidth={2.2} />
           </button>
           <button
             type="button"
@@ -90,6 +102,30 @@ export function AppHeader({ locationLabel, syncing, onRetry }: { locationLabel: 
           <ChevronDown className="h-3.5 w-3.5 text-white/50" strokeWidth={2.5} />
         </button>
       </div>
+
+      {persona === "student" && (
+        <button
+          type="button"
+          onClick={() => setCommuteSheetOpen(true)}
+          aria-label={commuteRoute ? "Edit commute route" : "Set commute route"}
+          title={commuteRoute ? "Edit commute route" : "Set commute route"}
+          className="mt-2 flex w-full items-center justify-between rounded-xl border border-sky-300/20 bg-sky-300/[0.08] px-3 py-2 text-left transition hover:bg-sky-300/[0.13] active:scale-[0.99]"
+        >
+          <span className="flex items-center gap-2 text-[11.5px] font-semibold text-sky-100">
+            <Car className="h-3.5 w-3.5 text-sky-200" strokeWidth={2.2} />
+            {commuteRoute ? `Route: ${commuteRoute.destination.city}` : "Set your commute route"}
+          </span>
+          <span className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-sky-200/70">
+            {commuteRoute ? "Edit" : "Set route"}
+          </span>
+        </button>
+      )}
+      {persona === "traveller" && (
+        <button type="button" onClick={() => setTravelSheetOpen(true)} className="mt-2 flex w-full items-center justify-between rounded-xl border border-violet-300/20 bg-violet-300/[0.08] px-3 py-2 text-left transition hover:bg-violet-300/[0.13] active:scale-[0.99]">
+          <span className="flex items-center gap-2 text-[11.5px] font-semibold text-violet-100"><Plane className="h-3.5 w-3.5 text-violet-200" />{travelPlan ? `${travelPlan.type} · ${travelPlan.origin.city} → ${travelPlan.destination.city}` : "Plan your trip"}</span>
+          <span className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-violet-200/70">{travelPlan ? "Edit" : "Plan"}</span>
+        </button>
+      )}
     </header>
   );
 }

@@ -9,19 +9,26 @@
 import { create } from "zustand";
 import {
   readLocation,
+  readCommuteRoute,
   readPersona,
   readRecentLocations,
+  readTravelPlan,
   writeLocation,
+  writeCommuteRoute,
   writePersona,
   writeRecentLocations,
+  writeTravelPlan,
 } from "../storage/mmkv";
 import { DEFAULT_LOCATION } from "../lib/presets";
 import type { LocationMeta, PersonaId, ThemeId } from "../types/sdui";
+import type { CommuteRoute, TravelPlan } from "../storage/mmkv";
 
 interface AppState {
   persona: PersonaId;
   location: LocationMeta;
   recentLocations: LocationMeta[];
+  commuteRoute: CommuteRoute | null;
+  travelPlan: TravelPlan | null;
   /** atmosphere currently rendered — driven by the SDUI payload */
   theme: ThemeId;
   /** dev switch — simulates a backend outage to demo offline-first cache */
@@ -38,6 +45,12 @@ interface AppState {
   setOnline: (v: boolean) => void;
   setSheetOpen: (v: boolean) => void;
   setLocationSheetOpen: (v: boolean) => void;
+  setCommuteRoute: (route: CommuteRoute | null) => void;
+  commuteSheetOpen: boolean;
+  setCommuteSheetOpen: (v: boolean) => void;
+  travelSheetOpen: boolean;
+  setTravelPlan: (plan: TravelPlan | null) => void;
+  setTravelSheetOpen: (v: boolean) => void;
 }
 
 const VALID_THEMES: ThemeId[] = ["dusk", "monsoon", "heat", "marine", "cloud"];
@@ -46,11 +59,15 @@ export const useAppStore = create<AppState>((set, get) => ({
   persona: readPersona() ?? "general",
   location: readLocation() ?? DEFAULT_LOCATION,
   recentLocations: readRecentLocations(),
+  commuteRoute: readCommuteRoute(),
+  travelPlan: readTravelPlan(),
   theme: "cloud",
   forceOffline: false,
   online: typeof navigator === "undefined" ? true : navigator.onLine,
   sheetOpen: false,
   locationSheetOpen: false,
+  commuteSheetOpen: false,
+  travelSheetOpen: false,
 
   setPersona: (persona) => {
     writePersona(persona); // persist selection (MMKV)
@@ -70,4 +87,14 @@ export const useAppStore = create<AppState>((set, get) => ({
   setOnline: (online) => set({ online }),
   setSheetOpen: (sheetOpen) => set({ sheetOpen }),
   setLocationSheetOpen: (locationSheetOpen) => set({ locationSheetOpen }),
+  setCommuteRoute: (commuteRoute) => {
+    writeCommuteRoute(commuteRoute);
+    set({ commuteRoute });
+  },
+  setCommuteSheetOpen: (commuteSheetOpen) => set({ commuteSheetOpen }),
+  setTravelPlan: (travelPlan) => {
+    writeTravelPlan(travelPlan);
+    set({ travelPlan });
+  },
+  setTravelSheetOpen: (travelSheetOpen) => set({ travelSheetOpen }),
 }));

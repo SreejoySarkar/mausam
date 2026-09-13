@@ -34,7 +34,7 @@ export function LocationSection(props: LocationSectionProps) {
         className="flex w-full items-center gap-3 rounded-2xl border border-dashed border-white/15 bg-white/[0.03] px-4 py-3.5 text-left transition hover:bg-white/[0.06] active:scale-[0.98]"
       >
         <Search className="h-4 w-4 shrink-0 text-white/55" strokeWidth={2.2} />
-        <span className="flex-1 text-[13px] font-medium text-white/55">Search any city, town or village…</span>
+        <span className="flex-1 text-[13px] font-medium text-white/55">Search any city, town, village or place…</span>
         <ChevronRight className="h-4 w-4 text-white/30" strokeWidth={2.2} />
       </button>
 

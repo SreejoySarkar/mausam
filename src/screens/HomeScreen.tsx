@@ -29,6 +29,8 @@ export function HomeScreen() {
   const location = useAppStore((s) => s.location);
   const online = useAppStore((s) => s.online);
   const forceOffline = useAppStore((s) => s.forceOffline);
+  const commuteRoute = useAppStore((s) => s.commuteRoute);
+  const travelPlan = useAppStore((s) => s.travelPlan);
   const setTheme = useAppStore((s) => s.setTheme);
   const setOnline = useAppStore((s) => s.setOnline);
 
@@ -49,8 +51,8 @@ export function HomeScreen() {
 
   /* step 5: server state owned by TanStack Query, keyed by persona+location */
   const query = useQuery({
-    queryKey: ["sdui-home", persona, location.id],
-    queryFn: ({ signal }) => getSDUIHome(persona, location, signal),
+    queryKey: ["sdui-home", persona, location.id, commuteRoute?.origin.id, commuteRoute?.destination.id, travelPlan?.origin.id, travelPlan?.destination.id, travelPlan?.type, travelPlan?.mode],
+    queryFn: ({ signal }) => getSDUIHome(persona, location, signal, commuteRoute, travelPlan),
     staleTime: 5 * 60_000,
     gcTime: 30 * 60_000,
     retry: 1,

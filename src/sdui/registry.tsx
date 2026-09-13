@@ -54,7 +54,9 @@ export const COMPONENT_REGISTRY: Record<string, RegistryEntry> = {
 
 /** Resolve a backend type string to a registry entry, or null if unknown. */
 export function resolveComponent(type: string): RegistryEntry | null {
-  const entry = COMPONENT_REGISTRY[type];
+  const entry = Object.prototype.hasOwnProperty.call(COMPONENT_REGISTRY, type)
+    ? COMPONENT_REGISTRY[type]
+    : undefined;
   if (!entry) {
     if (import.meta.env.DEV) {
       console.warn(`[SDUI] Unsupported component type "${type}" — skipped.`);

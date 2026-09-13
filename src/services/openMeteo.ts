@@ -22,13 +22,26 @@ export async function searchPlaces(query: string, signal?: AbortSignal): Promise
   const data = await res.json();
   const results = data?.results;
   if (!Array.isArray(results)) return [];
+  const normalized = query.trim().toLowerCase();
   return results
     .filter((r: unknown): r is GeoPlace => typeof (r as GeoPlace)?.latitude === "number")
+    .sort((a, b) => {
+      const rank = (place: GeoPlace) => {
+        if (place.feature_code === "PCLI" || place.feature_code === "PCL") return 0;
+        if (place.name.toLowerCase() === normalized) return 1;
+        if (place.feature_code?.startsWith("PPLC")) return 2;
+        if (place.feature_code?.startsWith("PPLA")) return 3;
+        if (place.feature_code?.startsWith("PPL")) return 4;
+        return 5;
+      };
+      return rank(a) - rank(b);
+    })
+    .filter((place, index, list) => list.findIndex((candidate) => `${candidate.name}|${candidate.country}|${candidate.admin1}` === `${place.name}|${place.country}|${place.admin1}`) === index)
     .slice(0, 8);
 }
 
 export function placeToLocation(p: GeoPlace): LocationMeta {
-  const region = p.admin1 || p.country || "";
+  const region = p.feature_code === "PCLI" || p.feature_code === "PCL" ? "Country" : p.admin1 || p.country || "";
   return {
     id: `geo-${p.id}`,
     city: p.name,
@@ -37,6 +50,38 @@ export function placeToLocation(p: GeoPlace): LocationMeta {
     lat: p.latitude,
     lon: p.longitude,
   };
+}
+
+/** Search exact POIs through the gateway; the TomTom key never reaches the browser. */
+export async function searchCommutePlaces(query: string, lat?: number, lon?: number, signal?: AbortSignal): Promise<LocationMeta[]> {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
+  if (!baseUrl) {
+    const places = await searchPlaces(query, signal);
+    return places.map(placeToLocation);
+  }
+
+  const params = new URLSearchParams({ q: query });
+  if (typeof lat === "number" && typeof lon === "number") {
+    params.set("lat", String(lat));
+    params.set("lon", String(lon));
+  }
+  const response = await fetch(`${baseUrl}/v1/places/search?${params}`, { signal });
+  if (!response.ok) throw new Error("Place search failed");
+  const data = await response.json();
+  return Array.isArray(data?.results) ? data.results : [];
+}
+
+/** Global travel search: do not constrain international destinations to a local radius. */
+export async function searchTravelPlaces(query: string, signal?: AbortSignal): Promise<LocationMeta[]> {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
+  if (!baseUrl) {
+    const places = await searchPlaces(query, signal);
+    return places.map(placeToLocation);
+  }
+  const response = await fetch(`${baseUrl}/v1/places/search?scope=global&q=${encodeURIComponent(query)}`, { signal });
+  if (!response.ok) throw new Error("Travel place search failed");
+  const data = await response.json();
+  return Array.isArray(data?.results) ? data.results : [];
 }
 
 export async function reverseGeocode(lat: number, lon: number, signal?: AbortSignal): Promise<string | null> {

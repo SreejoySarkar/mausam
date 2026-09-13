@@ -54,6 +54,8 @@ const KEYS = {
   persona: "persona",
   location: "location",
   recentLocations: "recentLocations",
+  commuteRoute: "commuteRoute",
+  travelPlan: "travelPlan",
   sdui: (persona: string, locationId: string) => `sdui:${persona}:${locationId}`,
 };
 
@@ -75,7 +77,7 @@ export function writeCachedSDUI(persona: string, locationId: string, payload: SD
 
 export function readPersona(): PersonaId | null {
   const p = storage.getString(KEYS.persona);
-  const valid: PersonaId[] = ["general", "farmer", "student", "traveller", "fisherman", "outdoor"];
+  const valid: PersonaId[] = ["general", "farmer", "student", "traveller", "fisherman", "outdoor", "health", "parent", "event"];
   return valid.includes(p as PersonaId) ? (p as PersonaId) : null;
 }
 
@@ -120,4 +122,45 @@ export function readRecentLocations(): LocationMeta[] {
 
 export function writeRecentLocations(list: LocationMeta[]): void {
   storage.set(KEYS.recentLocations, JSON.stringify(list.slice(0, 5)));
+}
+
+export interface CommuteRoute {
+  origin: LocationMeta;
+  destination: LocationMeta;
+}
+
+export function readCommuteRoute(): CommuteRoute | null {
+  const route = storage.getJSON<unknown>(KEYS.commuteRoute);
+  if (!isObject(route) || !isLocationMeta(route.origin) || !isLocationMeta(route.destination)) return null;
+  return { origin: route.origin, destination: route.destination };
+}
+
+export function writeCommuteRoute(route: CommuteRoute | null): void {
+  if (route) storage.set(KEYS.commuteRoute, JSON.stringify(route));
+  else storage.remove(KEYS.commuteRoute);
+}
+
+export type TravelType = "domestic" | "international";
+export type TravelMode = "flight" | "bus" | "train";
+
+export interface TravelPlan {
+  type: TravelType;
+  mode: TravelMode;
+  origin: LocationMeta;
+  destination: LocationMeta;
+  travelDate: string;
+  flightNumber?: string;
+}
+
+export function readTravelPlan(): TravelPlan | null {
+  const plan = storage.getJSON<unknown>(KEYS.travelPlan);
+  if (!isObject(plan) || !isLocationMeta(plan.origin) || !isLocationMeta(plan.destination)) return null;
+  if ((plan.type !== "domestic" && plan.type !== "international") || !["flight", "bus", "train"].includes(String(plan.mode))) return null;
+  if (typeof plan.travelDate !== "string") return null;
+  return { type: plan.type, mode: plan.mode, origin: plan.origin, destination: plan.destination, travelDate: plan.travelDate, flightNumber: typeof plan.flightNumber === "string" ? plan.flightNumber : undefined } as TravelPlan;
+}
+
+export function writeTravelPlan(plan: TravelPlan | null): void {
+  if (plan) storage.set(KEYS.travelPlan, JSON.stringify(plan));
+  else storage.remove(KEYS.travelPlan);
 }

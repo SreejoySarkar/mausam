@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mausam-postgres
+    environment:
+      POSTGRES_DB: mausam
+      POSTGRES_USER: mausam
+      POSTGRES_PASSWORD: mausam
+    ports:
+      - "5432:5432"
+    volumes:
+      - mausam-postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: mausam-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - mausam-redis:/data
+
+volumes:
+  mausam-postgres:
+  mausam-redis:

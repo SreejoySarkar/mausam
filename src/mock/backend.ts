@@ -346,6 +346,65 @@ function buildAdvisory(persona: PersonaId, w: LocationWeather): AdvisoryProps {
         ],
         footnote: "Aligned to heat-action guidance",
       };
+    case "health":
+      return {
+        icon: "HeartPulse",
+        accent: "rose",
+        title: "Health brief",
+        subtitle: `${w.city} · sensitivity-aware guidance`,
+        metrics: [
+          { label: "UV index", value: `${w.uv}`, sub: w.uvLabel },
+          { label: "Humidity", value: `${w.humidity}%`, sub: w.humidity > 70 ? "May feel heavy" : "Comfortable" },
+          { label: "Feels like", value: `${w.feels}°`, sub: w.feels > 38 ? "Heat caution" : "Moderate" },
+        ],
+        items: [
+          { icon: "Wind", title: "Air quality", body: "AQI data is available when the air-quality provider is connected. Check current AQI before prolonged outdoor activity.", tone: "info" },
+          { icon: "Sun", title: "UV protection", body: w.uv >= 8 ? "Very high UV: use SPF 30+, shade, and protective clothing." : w.uv >= 5 ? "Moderate-to-high UV: sunscreen and shade are recommended." : "Low-to-moderate UV conditions today.", tone: w.uv >= 8 ? "warn" : "good" },
+          { icon: "Droplets", title: "Humidity", body: w.humidity > 70 ? "High humidity may aggravate breathing discomfort and skin irritation. Keep cool and hydrated." : "Humidity is in a generally comfortable range.", tone: w.humidity > 70 ? "warn" : "good" },
+          { icon: "Leaf", title: "Pollen", body: "Pollen readings are not configured for this deployment.", tone: "info" },
+        ],
+        footnote: "General wellness guidance · not medical advice",
+      };
+    case "parent":
+      return {
+        icon: "Users",
+        accent: "amber",
+        title: "Family brief",
+        subtitle: `${w.city} · school-day planning`,
+        metrics: [
+          { label: "Morning", value: w.rainChance > 60 ? "Wet" : "Good", sub: `${w.rainChance}% rain chance` },
+          { label: "Visibility", value: `${w.vis} km`, sub: w.vis < 5 ? "Use caution" : "Good" },
+          { label: "Feels like", value: `${w.feels}°`, sub: w.feels > 38 ? "Heat caution" : "Comfortable" },
+        ],
+        items: [
+          { icon: "Umbrella", title: "School commute", body: w.rainChance > 60 ? "Rain is likely around commute hours. Pack rain protection and allow extra time." : "Mostly manageable school commute conditions this morning.", tone: w.rainChance > 60 ? "warn" : "good" },
+          { icon: "Eye", title: "Visibility", body: w.vis < 5 ? "Reduced visibility may affect school transport. Confirm the route before leaving." : "Visibility is good for the morning commute.", tone: w.vis < 5 ? "warn" : "good" },
+          { icon: "ThermometerSun", title: "Heat safety", body: w.feels > 38 ? "Send water and avoid prolonged midday outdoor activity." : "No significant heat stress expected during the school day.", tone: w.feels > 38 ? "warn" : "info" },
+          { icon: "AlertTriangle", title: "Severe weather", body: w.theme === "monsoon" ? "Keep children indoors during lightning or very heavy rain." : "No severe weather warning for the current forecast.", tone: w.theme === "monsoon" ? "danger" : "good" },
+        ],
+        footnote: "Family planning guidance · check local school notices",
+      };
+    case "event": {
+      const comfort = w.rainChance > 60 || w.feels > 38 || w.windKmh > 30 ? "Low" : w.rainChance > 35 || w.feels > 32 ? "Fair" : "Good";
+      return {
+        icon: "CalendarDays",
+        accent: "violet",
+        title: "Event planner",
+        subtitle: `${w.city} · outdoor planning`,
+        metrics: [
+          { label: "Comfort", value: comfort, sub: "Outdoor score" },
+          { label: "Rain risk", value: `${w.rainChance}%`, sub: w.rainChance > 50 ? "Have a backup" : "Manageable" },
+          { label: "Best window", value: w.theme === "heat" ? "Before 10 AM" : w.theme === "monsoon" ? "After 7 PM" : "6–10 AM", sub: "Outdoor" },
+        ],
+        items: [
+          { icon: "CloudRain", title: "Rain plan", body: w.rainChance > 50 ? "Keep a covered venue or rain backup ready for the event." : "Low rain risk supports an outdoor setup.", tone: w.rainChance > 50 ? "warn" : "good" },
+          { icon: "ThermometerSun", title: "Guest comfort", body: w.feels > 38 ? "Provide shade, water, and cooling stations; avoid the afternoon peak." : "Temperature should be comfortable for most guests.", tone: w.feels > 38 ? "warn" : "good" },
+          { icon: "Wind", title: "Wind", body: w.windKmh > 30 ? `Wind near ${w.windKmh} km/h may affect decor and temporary structures.` : `Wind near ${w.windKmh} km/h is suitable for normal outdoor setup.`, tone: w.windKmh > 30 ? "warn" : "info" },
+          { icon: "CalendarDays", title: "Planning note", body: "Confirm the forecast again 24 hours before the event.", tone: "info" },
+        ],
+        footnote: "Planning guidance · weather can change quickly",
+      };
+    }
     default:
       return {
         icon: "Sparkles",
@@ -399,6 +458,9 @@ const PERSONA_SUMMARY: Partial<Record<PersonaId, (w: LocationWeather) => string>
     w.rainChance > 50 ? "Carry an umbrella — rain likely around college hours." : "Dry commute this morning. Light evening breeze expected.",
   traveller: (w) =>
     w.theme === "heat" ? "Sightsee before 10 AM; the afternoon is for indoor plans." : "Postcard morning ahead. Keep evenings flexible for showers.",
+  health: (w) => w.uv >= 8 ? "Very high UV today. Protect exposed skin and plan outdoor time around shade." : "Check air quality before extended outdoor activity; hydration and shade remain sensible.",
+  parent: (w) => w.rainChance > 60 ? "Rain is likely around school commute hours. Pack rain protection and leave extra time." : "School commute conditions look manageable this morning.",
+  event: (w) => w.rainChance > 50 ? "Keep a rain backup ready; outdoor comfort improves outside the wettest window." : "Conditions support an outdoor event, with the morning offering the most comfortable window.",
   outdoor: (w) =>
     w.feels > 40 ? "Dangerous heat index. Front-load heavy work before 11 AM." : "Manageable morning. Storm risk rises late — wrap up by 5 PM.",
 };

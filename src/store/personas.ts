@@ -16,6 +16,9 @@ export const PERSONAS: PersonaMeta[] = [
   { id: "traveller", label: "Traveller", tagline: "Trip planning windows", icon: "Plane", accent: "#c4b5fd" },
   { id: "fisherman", label: "Fisherman", tagline: "Wind, waves & tides", icon: "Fish", accent: "#67e8f9" },
   { id: "outdoor", label: "Outdoor Worker", tagline: "Heat & lightning safety", icon: "HardHat", accent: "#fcd34d" },
+  { id: "health", label: "Health", tagline: "AQI, UV & sensitivity care", icon: "HeartPulse", accent: "#fb7185" },
+  { id: "parent", label: "Parent", tagline: "School commute & safety", icon: "Users", accent: "#fbbf24" },
+  { id: "event", label: "Event Planner", tagline: "Comfort & outdoor windows", icon: "CalendarDays", accent: "#a78bfa" },
 ];
 
 export function personaMeta(id: PersonaId): PersonaMeta {

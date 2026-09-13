@@ -49,4 +49,5 @@ export interface GeoPlace {
   longitude: number;
   country?: string;
   admin1?: string;
+  feature_code?: string;
 }
