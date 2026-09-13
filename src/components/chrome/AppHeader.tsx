@@ -7,8 +7,9 @@ import { resolveIcon } from "../../lib/icons";
 import { personaMeta } from "../../store/personas";
 import { useAppStore } from "../../store/useAppStore";
 import { ATMOSPHERE } from "../../lib/theme";
+import type { AlertProps } from "../../types/sdui";
 
-export function AppHeader({ locationLabel, syncing, onRetry }: { locationLabel: string; syncing: boolean; onRetry: () => void }) {
+export function AppHeader({ locationLabel, syncing, onRetry, notifications, onNotifications }: { locationLabel: string; syncing: boolean; onRetry: () => void; notifications: AlertProps[]; onNotifications: () => void }) {
   const persona = useAppStore((s) => s.persona);
   const theme = useAppStore((s) => s.theme);
   const setSheetOpen = useAppStore((s) => s.setSheetOpen);
@@ -56,11 +57,12 @@ export function AppHeader({ locationLabel, syncing, onRetry }: { locationLabel: 
           </button>
           <button
             type="button"
+            onClick={onNotifications}
             aria-label="Notifications"
             className="relative flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] backdrop-blur transition active:scale-90"
           >
             <Bell className="h-4 w-4 text-white/75" strokeWidth={2.2} />
-            <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-red-400" />
+            {notifications.length > 0 && <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-red-400" />}
           </button>
         </div>
       </div>

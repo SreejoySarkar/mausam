@@ -10,7 +10,7 @@
  *   7. SDUIRenderer resolves it via the Component Registry
  *   8. API failure -> keep cached UI + subtle stale banner + retry
  */
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { getSDUIHome } from "../services/api";
@@ -23,8 +23,11 @@ import { AppHeader } from "../components/chrome/AppHeader";
 import { OfflineBanner } from "../components/states/OfflineBanner";
 import { HomeSkeleton } from "../components/states/HomeSkeleton";
 import { ErrorState } from "../components/states/ErrorState";
+import { NotificationSheet } from "../components/chrome/NotificationSheet";
+import type { AlertProps } from "../types/sdui";
 
 export function HomeScreen() {
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const persona = useAppStore((s) => s.persona);
   const location = useAppStore((s) => s.location);
   const online = useAppStore((s) => s.online);
@@ -75,6 +78,9 @@ export function HomeScreen() {
   }, [online, forceOffline]);
 
   const payload = isValidPayload(query.data) ? query.data : cached?.payload ?? null;
+  const notifications = payload?.components
+    .filter((component) => component.type === "WeatherAlert")
+    .map((component) => component.props as unknown as AlertProps) ?? [];
 
   /* atmosphere follows the payload's theme */
   useEffect(() => {
@@ -90,7 +96,14 @@ export function HomeScreen() {
 
   return (
     <>
-      <AppHeader locationLabel={payload?.location.label ?? location.label} syncing={query.isFetching} onRetry={retry} />
+      <AppHeader
+        locationLabel={payload?.location.label ?? location.label}
+        syncing={query.isFetching}
+        onRetry={retry}
+        notifications={notifications}
+        onNotifications={() => setNotificationsOpen(true)}
+      />
+      <NotificationSheet alerts={notifications} open={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
 
       <main className="scrollbar-hide relative z-20 flex-1 overflow-y-auto overscroll-contain px-5 pb-12">
         <AnimatePresence>
